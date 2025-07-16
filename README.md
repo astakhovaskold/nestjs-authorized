@@ -7,6 +7,7 @@ Authorization module for NestJS with JWT 2.0 (access/refresh) support, stateless
 - UserService abstraction for maximum flexibility
 - Easy integration with any NestJS project
 - Uses @nestjs/jwt and passport-jwt under the hood
+- **Optional ready-to-use AuthController** for quick start
 
 ## Installation
 ```
@@ -42,7 +43,7 @@ export class UserService implements IUserService<any> {
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { AuthModule, JwtModuleOptions } from 'nest-auth-kit';
+import { AuthModule, JwtModuleOptions, AuthController } from 'nest-auth-kit';
 import { UserService } from './user.service';
 
 const jwtOptions: JwtModuleOptions = {
@@ -57,48 +58,19 @@ const jwtOptions: JwtModuleOptions = {
     AuthModule.forRoot(jwtOptions, { provide: 'UserService', useClass: UserService }),
   ],
   providers: [UserService],
+  controllers: [AuthController], // <-- Import ready-to-use AuthController
 })
 export class AppModule {}
 ```
 
-### 3. Use Guards in your Controllers
-```ts
-// example.controller.ts
-import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
-import { JwtAuthGuard, RefreshTokenGuard, JwtService, LoginDto, RefreshTokenDto } from 'nest-auth-kit';
+### 3. Use the ready AuthController or your own
 
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly jwtService: JwtService) {}
+#### Endpoints provided by AuthController:
+- `POST /auth/login` — login with email/username and password, returns access & refresh tokens
+- `POST /auth/refresh` — get new access token using refresh token
+- `POST /auth/me` — get current user info (requires access token)
 
-  @Post('login')
-  async login(@Body() dto: LoginDto) {
-    // Validate user and generate tokens
-    const payload = { sub: 1, email: dto.email };
-    return {
-      accessToken: await this.jwtService.generateAccessToken(payload),
-      refreshToken: await this.jwtService.generateRefreshToken(payload),
-    };
-  }
-
-  @Post('refresh')
-  @UseGuards(RefreshTokenGuard)
-  async refresh(@Body() dto: RefreshTokenDto) {
-    // Validate refresh token and issue new access token
-    const payload = await this.jwtService.validateRefreshToken(dto.refreshToken);
-    if (!payload) throw new Error('Invalid refresh token');
-    return {
-      accessToken: await this.jwtService.generateAccessToken(payload),
-    };
-  }
-
-  @Get('protected')
-  @UseGuards(JwtAuthGuard)
-  getProtected(@Req() req) {
-    return { message: 'You are authenticated!', user: req.user };
-  }
-}
-```
+You can also implement your own controller using guards and JwtService from the package.
 
 ## DTOs Example
 ```ts
@@ -149,3 +121,4 @@ export class RefreshTokenDto {
 - `JwtAuthGuard` — protect routes with access token
 - `RefreshTokenGuard` — protect refresh endpoint
 - `IUserService` — implement your own user logic
+- `AuthController` — optional ready-to-use controller for login/refresh/me

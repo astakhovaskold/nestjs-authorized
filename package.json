@@ -40,5 +40,8 @@
     "passport-jwt": "^4.0.1",
     "prettier": "^3.6.2",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "class-validator": "^0.14.2"
   }
 }

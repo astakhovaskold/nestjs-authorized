@@ -15,7 +15,7 @@
     "refresh-token",
     "stateless"
   ],
-  "author": "",
+  "author": "Askold Astakhov",
   "license": "MIT",
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",

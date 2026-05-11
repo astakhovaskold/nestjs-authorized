@@ -1,12 +1,12 @@
-import { Injectable, Inject, Optional } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { JwtService as NestJwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 export interface JwtModuleOptions {
   accessTokenSecret: string;
-  accessTokenExpiresIn: string | number;
+  accessTokenExpiresIn: NonNullable<JwtSignOptions['expiresIn']>;
   refreshTokenSecret: string;
-  refreshTokenExpiresIn: string | number;
+  refreshTokenExpiresIn: NonNullable<JwtSignOptions['expiresIn']>;
 }
 
 @Injectable()

@@ -1,3 +1,11 @@
-// Entry point for nest-auth-kit
-
 export * from './module/auth.module';
+export * from './controllers/auth.controller';
+export * from './services/jwt.service';
+export * from './guards/jwt-auth.guard';
+export * from './guards/refresh-token.guard';
+export * from './strategies/jwt.strategy';
+export * from './strategies/refresh-token.strategy';
+export * from './interfaces/user-service.interface';
+export * from './interfaces/jwt-payload.interface';
+export * from './dto/login.dto';
+export * from './dto/refresh-token.dto';

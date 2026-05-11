@@ -35,13 +35,13 @@ Registers the auth module as global and wires:
 ```ts
 type JwtModuleOptions = {
   accessTokenSecret: string;
-  accessTokenExpiresIn: string | number;
+  accessTokenExpiresIn: JwtSignOptions['expiresIn'];
   refreshTokenSecret: string;
-  refreshTokenExpiresIn: string | number;
+  refreshTokenExpiresIn: JwtSignOptions['expiresIn'];
 };
 ```
 
-Use different secrets and expirations for access and refresh tokens.
+Use different secrets and expirations for access and refresh tokens. In practice this means the same `expiresIn` values accepted by `@nestjs/jwt`, for example `'15m'`, `'7d'`, or a numeric value in seconds.
 
 ## `IUserService<TUser>`
 

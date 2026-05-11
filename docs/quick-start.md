@@ -6,6 +6,18 @@
 npm install nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
 ```
 
+```bash
+yarn add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
+```bash
+pnpm add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
+```bash
+bun add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
 Your NestJS application should already include `@nestjs/common` and `@nestjs/core`.
 
 ## 1. Implement `IUserService`

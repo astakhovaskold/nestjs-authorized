@@ -7,16 +7,17 @@ This repository contains a small NestJS authorization library. Keep contribution
 ## Local Setup
 
 1. Use Node.js `22` from [`.nvmrc`](.nvmrc).
-2. Install dependencies:
+2. Use `pnpm` as the project package manager. The version is pinned in [`package.json`](package.json) via `packageManager`.
+3. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
-3. Build the package:
+4. Build the package:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ## Contribution Guidelines
@@ -30,7 +31,7 @@ npm run build
 
 Before opening a pull request:
 
-1. Run `npm run build`
+1. Run `pnpm build`
 2. Review generated API examples in `README.md` and `docs/`
 3. Confirm code snippets still match the exported package surface
 

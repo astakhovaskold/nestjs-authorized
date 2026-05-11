@@ -2,6 +2,7 @@
   "name": "nestjs-authorized",
   "version": "0.2.0",
   "description": "JWT 2.0 auth module for NestJS with stateless refresh tokens and best practices.",
+  "packageManager": "pnpm@9.7.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

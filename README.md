@@ -30,7 +30,19 @@ Install the package and its peer dependencies in your NestJS application:
 npm install nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
 ```
 
-The repository targets Node.js `22` via [`.nvmrc`](.nvmrc).
+```bash
+yarn add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
+```bash
+pnpm add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
+```bash
+bun add nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+
+The repository itself uses `pnpm` as the primary package manager and targets Node.js `22` via [`.nvmrc`](.nvmrc).
 
 ## Quick Start
 

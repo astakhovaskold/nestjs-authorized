@@ -1,6 +1,6 @@
 {
-  "name": "nest-auth-kit",
-  "version": "0.1.0",
+  "name": "nestjs-authorized",
+  "version": "0.2.0",
   "description": "JWT 2.0 auth module for NestJS with stateless refresh tokens and best practices.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     "refresh-token",
     "stateless"
   ],
-  "author": "Askold Astakhov",
+  "author": "Askold Astakhov <astakhovaskold@gmail.com> (https://aastakhov.com)",
   "license": "MIT",
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",

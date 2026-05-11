@@ -1,50 +1,57 @@
-# nest-auth-kit
+<p align="center">
+  <img src="media/nestjs-authorized-logo.png" alt="nestjs-authorized" width="960" />
+</p>
 
-Authorization module for NestJS with JWT 2.0 (access/refresh) support, stateless refresh tokens, and best practices.
+# nestjs-authorized
+
+JWT 2.0 authorization module for NestJS with separate access and refresh token flows, stateless refresh tokens, and a small integration surface.
+
+## Badges
+
+[![NestJS 11](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![TypeScript 5](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js 22](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](LICENSE.md)
+[![JWT access/refresh](https://img.shields.io/badge/JWT-access%2Frefresh-000000?logo=jsonwebtokens&logoColor=white)](docs/api.md)
 
 ## Features
-- Stateless refresh tokens (no database storage required)
-- UserService abstraction for maximum flexibility
-- Easy integration with any NestJS project
-- Uses @nestjs/jwt and passport-jwt under the hood
-- **Optional ready-to-use AuthController** for quick start
+
+- Stateless refresh token flow with separate secrets and expirations for access and refresh tokens
+- `AuthModule.forRoot(...)` setup for quick NestJS integration
+- Optional bundled `AuthController` for `login`, `refresh`, and `me` endpoints
+- Exported guards, strategies, DTOs, and interfaces for custom integrations
+- Small public API that stays close to standard NestJS auth patterns
 
 ## Installation
+
+Install the package and its peer dependencies in your NestJS application:
+
+```bash
+npm install nestjs-authorized @nestjs/jwt @nestjs/passport passport passport-jwt
 ```
-npm install nest-auth-kit
-```
+
+The repository targets Node.js `22` via [`.nvmrc`](.nvmrc).
 
 ## Quick Start
 
-### 1. Implement your UserService
 ```ts
-// user.service.ts
-import { Injectable } from '@nestjs/common';
-import { IUserService } from 'nest-auth-kit';
+import { Injectable, Module } from '@nestjs/common';
+import { AuthController, AuthModule, type IUserService, type JwtModuleOptions } from 'nestjs-authorized';
 
 @Injectable()
-export class UserService implements IUserService<any> {
+class UserService implements IUserService<any> {
   async validateUser({ email, username, password }: { email?: string; username?: string; password: string }) {
-    // Your logic to validate user credentials
-    return { id: 1, email: 'user@example.com' };
+    return { id: 1, email, username, password };
   }
+
   async findById(id: string | number) {
-    // Your logic to find user by id
-    return { id, email: 'user@example.com' };
+    return { id };
   }
+
   async findByPayload(payload: any) {
-    // Your logic to find user by JWT payload
-    return { id: payload.sub, email: payload.email };
+    return { id: payload.sub, email: payload.email, username: payload.username };
   }
 }
-```
-
-### 2. Register AuthModule in your AppModule
-```ts
-// app.module.ts
-import { Module } from '@nestjs/common';
-import { AuthModule, JwtModuleOptions, AuthController } from 'nest-auth-kit';
-import { UserService } from './user.service';
 
 const jwtOptions: JwtModuleOptions = {
   accessTokenSecret: 'ACCESS_SECRET',
@@ -54,71 +61,25 @@ const jwtOptions: JwtModuleOptions = {
 };
 
 @Module({
-  imports: [
-    AuthModule.forRoot(jwtOptions, { provide: 'UserService', useClass: UserService }),
-  ],
+  imports: [AuthModule.forRoot(jwtOptions, { provide: 'UserService', useClass: UserService })],
   providers: [UserService],
-  controllers: [AuthController], // <-- Import ready-to-use AuthController
+  controllers: [AuthController],
 })
 export class AppModule {}
 ```
 
-### 3. Use the ready AuthController or your own
+If you use the bundled `AuthController`, register your provider under the `'UserService'` token. For a fuller walkthrough, see [docs/quick-start.md](docs/quick-start.md).
 
-#### Endpoints provided by AuthController:
-- `POST /auth/login` — login with email/username and password, returns access & refresh tokens
-- `POST /auth/refresh` — get new access token using refresh token
-- `POST /auth/me` — get current user info (requires access token)
+## Documentation
 
-You can also implement your own controller using guards and JwtService from the package.
+- [docs/README.md](docs/README.md) - documentation index
+- [docs/quick-start.md](docs/quick-start.md) - setup, provider wiring, and built-in controller usage
+- [docs/api.md](docs/api.md) - exported API, contracts, guards, strategies, and runtime notes
 
-## DTOs Example
-```ts
-// login.dto.ts
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+## Contributing
 
-export class LoginDto {
-  @IsOptional()
-  @IsString()
-  readonly email?: string;
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, change expectations, and verification steps.
 
-  @IsOptional()
-  @IsString()
-  readonly username?: string;
+## License
 
-  @IsNotEmpty()
-  @IsString()
-  readonly password: string;
-
-  constructor(partial?: Partial<LoginDto>) {
-    if (partial) {
-      this.email = partial.email;
-      this.username = partial.username;
-      this.password = partial.password ?? '';
-    } else {
-      this.password = '';
-    }
-  }
-}
-
-// refresh-token.dto.ts
-import { IsString, IsNotEmpty } from 'class-validator';
-
-export class RefreshTokenDto {
-  @IsNotEmpty()
-  @IsString()
-  readonly refreshToken: string;
-
-  constructor(refreshToken?: string) {
-    this.refreshToken = refreshToken ?? '';
-  }
-}
-```
-
-## API Overview
-- `AuthModule.forRoot(options, userServiceProvider)` — register the module
-- `JwtService` — generate/validate access and refresh tokens
-- `JwtAuthGuard` — protect routes with access token
-- `RefreshTokenGuard` — protect refresh endpoint
-- `IUserService` — implement your own user logic
-- `AuthController` — optional ready-to-use controller for login/refresh/me
+[MIT](LICENSE.md)
